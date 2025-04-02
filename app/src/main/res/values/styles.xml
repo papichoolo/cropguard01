@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SpinnerWhiteDropdown" parent="Widget.AppCompat.Spinner.DropDown">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:popupBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:fontFamily">@font/baloo_2</item>
+    </style>
+</resources>

@@ -23,7 +23,9 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -95,7 +97,7 @@ public class TFLiteClassifier extends AppCompatActivity {
     private void setupNextButton() {
         if (nextButton != null) {
             nextButton.setOnClickListener(v -> {
-                startActivity(new Intent(TFLiteClassifier.this, GovernmentSchemesActivity.class));
+                startActivity(new Intent(TFLiteClassifier.this, ReportActivity.class));
             });
         } else {
             Log.e("TFLiteClassifier", "Next button is null");
@@ -125,14 +127,14 @@ public class TFLiteClassifier extends AppCompatActivity {
         }
 
         String predictedClass = CLASS_LABELS[maxPos];
-        float confidence = maxConfidence;
+        float confidence = maxConfidence * 100; // Convert to percentage
         String imageSize = "299x299";
 
         // Create JSON object with prediction data
         try {
             JSONObject predictionData = new JSONObject();
             predictionData.put("class_name", predictedClass);
-            predictionData.put("confidence", confidence);
+            predictionData.put("confidence", String.format("%.1f", confidence));
             predictionData.put("image_size", imageSize);
 
             // Send data to API
@@ -247,13 +249,21 @@ public class TFLiteClassifier extends AppCompatActivity {
                 }
 
                 int responseCode = conn.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // Read response if needed
-                    // For now, we'll just return success
-                    return "Success";
-                } else {
-                    return "Error: " + responseCode;
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    return "Error: Server returned code " + responseCode;
                 }
+
+                // Read the response
+                StringBuilder response = new StringBuilder();
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                }
+
+                return response.toString();
 
             } catch (Exception e) {
                 Log.e("TFLiteClassifier", "Error sending prediction data", e);
@@ -263,9 +273,15 @@ public class TFLiteClassifier extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (!result.startsWith("Success")) {
+            if (!result.startsWith("Error")) {
+                // Start ReportActivity with the API response
+                Intent intent = new Intent(TFLiteClassifier.this, ReportActivity.class);
+                intent.putExtra("api_response", result);
+                startActivity(intent);
+                finish(); // Close the current activity
+            } else {
                 Toast.makeText(TFLiteClassifier.this,
-                        "Error sending prediction data: " + result,
+                        "Error getting prediction data: " + result,
                         Toast.LENGTH_SHORT).show();
             }
         }
