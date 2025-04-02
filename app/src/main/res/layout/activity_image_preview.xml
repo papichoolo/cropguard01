@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    android:background="@drawable/starting_background"
+    tools:context=".ImagePreviewActivity">
+
+    <ImageView
+        android:id="@+id/previewImageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Preview Image"
+        android:fontFamily="@font/baloo_2"
+        android:gravity="center"
+        android:textColor="#678e15"
+        android:textColorHint="#678e15"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/uploadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:backgroundTint="#437408"
+            android:textColor="@color/white"
+            android:fontFamily="@font/baloo_2"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/clickAgainButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#437408"
+            android:textColor="@color/white"
+            android:fontFamily="@font/baloo_2"
+            android:text="Back" />
+
+    </LinearLayout>
+
+</LinearLayout>
